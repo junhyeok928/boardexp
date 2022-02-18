@@ -13,7 +13,8 @@ public class Board {
 	private Date regdte;
 	private Date uptdte;
 	private int readcnt;
-	private MultipartFile report;
+	private MultipartFile[] report;
+	
 	public int getNo() {
 		return no;
 	}
@@ -62,11 +63,12 @@ public class Board {
 	public void setReadcnt(int readcnt) {
 		this.readcnt = readcnt;
 	}
-	public MultipartFile getReport() {
+	public MultipartFile[] getReport() {
 		return report;
 	}
-	public void setReport(MultipartFile report) {
+	public void setReport(MultipartFile[] report) {
 		this.report = report;
 	}
+
 	
 }

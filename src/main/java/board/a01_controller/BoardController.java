@@ -30,8 +30,7 @@ public class BoardController {
 	// 등록 처리 후 화면 호출..
 	@RequestMapping(params="method=insert")
 	public String boardInsert(Board insert, Model d) {
-		service.insertBoard(insert);
-		d.addAttribute("msg", "등록성공");
+		d.addAttribute("msg", service.insertBoard(insert));
 		return "a02_boardInsert";
 	}
 }

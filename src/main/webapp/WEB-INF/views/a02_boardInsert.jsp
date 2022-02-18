@@ -56,6 +56,10 @@
 		$(".custom-file-input").on("change",function(){
 			$(this).next(".custom-file-label").text($(this).val());
 		});
+		$("#addFile").click(function(){
+			console.log("추가");
+			$("form").append($(".fileCls").eq(-1).clone());
+		});
 		
 	});
 </script>
@@ -79,7 +83,7 @@
 		</div>
 		<input name="title" class="form-control" placeholder="제목입력하세요" />			 
 	</div>  
-	<div class="input-group mb-3">	
+	<div class="input-group mb-3 fileCls">	
 		<div class="input-group-prepend">
 			<span class="input-group-text">작 성 자</span>
 		</div>
@@ -90,7 +94,7 @@
 		</div>
 		<input name="refno" class="form-control" value="0"/>	
 	</div>		
-	<div class="input-group mb-3">
+	<div class="input-group mb-3 fileCls">
 		<div class="input-group-prepend">
 			<span class="input-group-text">내 용</span>
 		</div>
@@ -98,9 +102,11 @@
 			class="form-control" 
 			placeholder="내용입력하세요" ></textarea>		 
 	</div> 
-	<div class="input-group mb-3">
+	<div class="input-group mb-3 fileCls">
 		<div class="input-group-prepend">
-			<span class="input-group-text">첨부 파일</span>
+			<span class="input-group-text"
+				id="addFile"
+			>첨부 파일(추가)</span>
 		</div>
 		<div class="custom-file">
 			<input type="file" name="report" 
@@ -109,13 +115,13 @@
 			파일을 선택하세요!</label>
 		</div>		
 	</div> 	 
-	<div style="text-align:right;">
+ 	</form>
+ 	<div style="text-align:right;">
 		<input type="button" class="btn btn-info"
 			value="등록" id="regBtn"/>
 		<input type="button" class="btn btn-success"
 			value="조회 화면으로" id="goMain"/>
-	</div>
- 	</form>
+	</div>	
 </div>
 
 </div>
