@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >		
+<mapper namespace="board.a03_dao.BoardDao">
+	<!-- 
+	List<Board> getBoardList(Board sch)
+	 -->
+	<select id="getBoardList" parameterType="board" resultType="board">
+		select * 
+		from board 
+		where 1=1
+		<!-- mybatis에서 null 아니고 ''공백이 아닐 때 -->
+		<if test="writer!=null and writer!=''"> 
+		and writer like '%'||#{writer}||'%'
+		</if> 
+		<if test="title!=null and title!=''"> 
+		and title like '%'||#{title}||'%'
+		</if>
+		order by no desc	
+	</select>
+	<!-- 
+				insert into board values(board_seq.nextval, 0, '초기화면','홍길동',
+				'내용', sysdate, sysdate, 0);
+				INSERT INTO fileInfo values(#{fno}, #{pathinfo},
+					#{fname},sysdate,sysdate,#{etc})
+				public void insertBoard(Board ins);
+				public void insertFileInfo(FileInfo ins);	
+	 -->
+	<insert id="insertBoard" parameterType="board">
+		insert into board values(board_seq.nextval, #{refno}, #{title}, #{writer},
+				#{content}, sysdate, sysdate, 0)		
+	</insert>
+	<insert id="insertFileInfo" parameterType="fileInfo">
+		INSERT INTO fileInfo values(board_seq.currval, #{pathinfo},
+			#{fname},sysdate,sysdate,#{etc})	
+	</insert>
+	
+	
+	
+	
+		 	
+	
+</mapper>
