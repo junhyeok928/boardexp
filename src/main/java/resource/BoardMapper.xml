@@ -36,9 +36,22 @@
 			#{fname},sysdate,sysdate,#{etc})	
 	</insert>
 	
-	
-	
-	
+	<!-- 
+		public Board getBoard(int no);
+		public FileInfo getFileInfo(int fno);	
+	 -->	
+	<select id="getBoard" parameterType="int" resultType="board">
+		select * from board where no = #{no}
+	</select>
+	<select id="getFileInfo" parameterType="int" resultType="string">
+		select fname from fileInfo where fno = #{fno}
+	</select>	
+	<!-- 
+	deleteBoard(int no);
+	 -->
+	<delete id="deleteBoard" parameterType="int">
+		delete from board where no = #{no}
+	</delete>
 		 	
 	
 </mapper>

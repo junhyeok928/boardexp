@@ -33,4 +33,19 @@ public class BoardController {
 		d.addAttribute("msg", service.insertBoard(insert));
 		return "a02_boardInsert";
 	}
+	@RequestMapping(params="method=detail")
+	public String boardDetail(int no, Model d) {
+		System.out.println("번호:"+no);
+		// 기본 detail 정보를 모델로 리스트 처리..	
+		d.addAttribute("board", service.getBoard(no));
+		return "a03_boardDetail";
+	}
+	@RequestMapping(params="method=del")
+	public String boardDelete(int no, Model d) {
+		System.out.println("삭제 번호:"+no);
+		// 기본 detail 정보를 모델로 리스트 처리..	
+		service.deleteBoard(no);
+		d.addAttribute("msg", "삭제되었습니다!");
+		return "a03_boardDetail";
+	}	
 }

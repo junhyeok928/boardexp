@@ -1,5 +1,6 @@
 package board.a04_vo;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ public class Board {
 	private Date uptdte;
 	private int readcnt;
 	private MultipartFile[] report;
+	private ArrayList<String> fnames;
 	
 	public int getNo() {
 		return no;
@@ -68,6 +70,12 @@ public class Board {
 	}
 	public void setReport(MultipartFile[] report) {
 		this.report = report;
+	}
+	public ArrayList<String> getFnames() {
+		return fnames;
+	}
+	public void setFnames(ArrayList<String> fnames) {
+		this.fnames = fnames;
 	}
 
 	

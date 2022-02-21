@@ -129,9 +129,77 @@
 	3) service 안에 여러 개 파일이 등록 반복 
 		- upload
 		- dao	
-							
+				
+# 게시판 상세 내용 리스트 및 파일다운로드 처리
+0. 주요파일 및 VO
+	BoardController.java
+		상세화면 @RequestMapping(params="method=detail")
+	BoardDao.java
+		public Board getBoard(int empno);
+	BoardMapper.xml
+	\views\a01_boardList.jsp
+	\views\a03_boardDetail.jsp	
+			
+1. 처리 프로세스
+	1) 리스트 화면에서 리스트 데이터 더블 클릭시, empno를 요청값을 넘기면서
+		controller 호출
+	2) 컨트롤러 호출되어 service, dao, mapper를 호출 하여 empno 값을 넘겨
+		단일 데이터를 가져오고,
+		- 데이터 정보 가져오기
+		- 파일 정보 가져오기.
+	3) 컨트롤러에 모델 데이터로 Board정보와 파일명에 정보를 설정 처리
+	4) 화면에 상세 정보를 가져와서 출력한다.	
+2. 개발 순서
+	0) controller 선언
+		@RequestMapping(params="method=detail")
+		int no 요청값을 가져와서.
+		\views\a03_boardDetail.jsp 생성하여, 상세화면에 no가 출력되게 처리
+	1) 리스트 화면에서 controller 호출
+		location.href="${path}/board.do?method=detail&no="+no
+	==========================================================		
 		
-		
+	2) dao, mapper
+		sql = select * from board where no = ?	
+			  select * from fileinfo where fno= ?
+		public Board getBoard(int no);
+		public FileInfo getFileInfo(int fno);
+	3) service, dao
+	=============================================
+	4) controller 
+		d.addAttribute("board",service.getBoard(no));
+		d.addAttribute("files",service.getFileInfo(no));
+	5) view
+		<input name="no" value="${board.no}"/>	
+		<input name="title" value="${board.title}"/>
+		모델 데이터 화면에 출력하기..	
+	==================== 2/3조 ========================							
+# 삭제
+1. 프로세스
+	1) 삭제 클릭시
+	2) 삭제 컨트롤러 호출
+	3) service ==> dao ==> mapper
+	4) 컨트롤러 
+		모델 데이터 삭제완료
+	5) 화면단 삭제완료. msg 표현.
+2. 개발순서
+	0) controller
+		method=del
+		int no
+	1) 삭제버튼 클릭 03_boardDetail.jsp
+		location.href="${path}/board.do?method=del&no="+$("[name=no]").val();
+	2) controller
+		번호 확인
+	3) 화면에서
+		var msg = "${msg}"
+		if(msg !=""){
+			alert(msg+"\n조회화면 이동"))
+			location.href="${path}/board.do?method=list";
+		}
+	4) sql : delete from board where no=#{no}
+	5) dao/mapper
+		public void deleteBoard(int no)
+	6) service ==> controller	
+	=============5조===========	
 		
 			
 			

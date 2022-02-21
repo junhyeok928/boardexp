@@ -37,6 +37,10 @@
 			}
 		});
 	});
+	function detail(no){
+		// 더블 클릭시, no를 매개변수를 넘기고 controller에 요청값을 전달 처리.
+		location.href="${path}/board.do?method=detail&no="+no;
+	}
 </script>
 </head>
 
@@ -72,7 +76,7 @@
     </thead>	
     <tbody>
     	<c:forEach var="board" items="${boardList}">
-    		<tr><td>${board.no}</td><td>${board.title}</td>
+    		<tr ondblclick="detail(${board.no})"><td>${board.no}</td><td>${board.title}</td>
     			<td>${board.writer}</td>
     			<td><fmt:formatDate value="${board.regdte}"/></td>
     			<td>${board.readcnt}</td></tr>

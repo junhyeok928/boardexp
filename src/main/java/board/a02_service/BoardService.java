@@ -56,5 +56,13 @@ public class BoardService {
 		}
 		return msg;
 	}
-
+	public Board getBoard(int no) {
+		// Board 안에 상세 정보와 다운로드할 파일 정보를 설정되게 했다.
+		Board b = dao.getBoard(no);
+		b.setFnames(dao.getFileInfo(no));
+		return b;
+	}
+	public void deleteBoard(int no) {
+		dao.deleteBoard(no);
+	}
 }

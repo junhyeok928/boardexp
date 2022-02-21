@@ -1,6 +1,6 @@
 # 설정
 jdbc.driver=oracle.jdbc.driver.OracleDriver
-jdbc.url=jdbc:oracle:thin:@106.10.23.227:1521:xe
+jdbc.url=jdbc:oracle:thin:@localhost:1521:xe
 jdbc.user=scott
 jdbc.pass=tiger
 # 업로드할 파일 경로 설정
