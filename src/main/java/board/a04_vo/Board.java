@@ -15,6 +15,7 @@ public class Board {
 	private Date uptdte;
 	private int readcnt;
 	private MultipartFile[] report;
+	// 파일 정보로 화면에 한 번에 로딩 하기 위해서 처리..
 	private ArrayList<String> fnames;
 	
 	public int getNo() {
