@@ -5,6 +5,7 @@ import java.util.List;
 
 import board.a04_vo.Board;
 import board.a04_vo.FileInfo;
+import board.a04_vo.Member;
 
 // board.a03_dao.Dao
 public interface BoardDao {
@@ -14,4 +15,5 @@ public interface BoardDao {
 	public Board getBoard(int no);
 	public ArrayList<String> getFileInfo(int fno);
 	public void deleteBoard(int no);
+	public Member login(Member login);
 }

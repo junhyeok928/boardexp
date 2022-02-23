@@ -28,6 +28,7 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		var sessId = "${member.id}"
 		var msg = "${msg}";
 		if(msg!=""){
 			alert(msg+"\n조회화면이동!")
@@ -40,8 +41,12 @@
 			location.href="${path}/board.do?method=list";
 		});
 		$("#delBtn").click(function(){
-			if(confirm("삭제하시겠습니까?")){
-				location.href="${path}/board.do?method=del&no="+$("[name=no]").val();	
+			if(sessId!=$("[name=writer]").val()){
+				alert("삭제는 작성자만이 가능합니다.")
+			}else{
+				if(confirm("삭제하시겠습니까?")){
+					location.href="${path}/board.do?method=del&no="+$("[name=no]").val();	
+				}
 			}
 		});
 	});
@@ -87,7 +92,7 @@
 			<span class="input-group-text">작 성 자</span>
 		</div>
 		<input name="writer" class="form-control" 
-			placeholder="작성자입력하세요" />	
+			placeholder="작성자입력하세요"   value="${board.writer}" />	
 		<div class="input-group-prepend">
 			<span class="input-group-text">조회수</span>
 		</div>

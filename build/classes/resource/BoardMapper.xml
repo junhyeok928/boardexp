@@ -52,6 +52,13 @@
 	<delete id="deleteBoard" parameterType="int">
 		delete from board where no = #{no}
 	</delete>
-		 	
+	<!-- 
+	List<Member> login(Member login);
+	 -->
+	<select id="login" parameterType="member" resultType="member">
+		select * 
+		from member 
+		where id=#{id} and pass=#{pass}
+	</select>	 	
 	
 </mapper>

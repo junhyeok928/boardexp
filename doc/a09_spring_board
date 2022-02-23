@@ -201,8 +201,97 @@
 	6) service ==> controller	
 	=============5조===========	
 		
-			
-			
+# 게시판 세션로그인 처리 및 권한에 따른 기능 처리
+1. 주요기능
+	1) 초기화면에 session값이 없으면 로그인 처리
+	2) 로그인으로 DB에 사용자 정보 불러와서 session 값으로 설정.
+		- 로그인 실패시, 다시 인증 과정 거치게 처리
+	3) 글등록시, 등록자를 session의 id값으로 자동 설정..
+	4) 글 수정/삭제 버튼 클릭시, 현재 session과 작성자의 값을 비교하여
+		등록자일 때만 수정/삭제 처리가능하게 처리..  			
+2. 프로세스 순서
+	1) controller list 화면 호출
+	2) view단에서 session값 (member.id)가 없으면, 로그인 하겠습니다.
+		표시면, 로그인 팝업창(dialogue) 로딩
+	3) 아이디 패스워드 입력 로그인 버튼 클릭
+	4) 로그인 controller 호출, 
+		id, pass로 DB 확인, 있으면
+		msg로 로그인 성공 및 session값설정
+		없으면, 로그인 실패 list 화면들어가서 login 다이얼로그 박스 로딩
+	5) 로그인 성공하면, 상단에 @@ 로그인 중 표기
+	6) 등록시, 작성자 자동으로 로그인 아이디값 입력
+	7) 수정/삭제 버튼 클릭시, 현재 로그인 session 아이디와, 같은지 여부를 확인해서
+		권한 있는지 alert()로딩
+3. 개발 순서(\A07_SessionController.java 참고)	
+	1) controller 단 session 처리 - sessionattribute, modelattribute
+		@SessionAttributes("member")
+		
+		@ModelAttribute("member")
+		public Member getMember() {
+			return new Member();
+		}
+	
+	2) controller단 로그인 처리 url mapping 메서드 선언.
+		@RequestMapping(params="method=login")
+		public String login(@ModelAttribute("member") Member member, Model d) {
+			d.addAttribute("loginMsg", "로그인 성공");
+			return "forward:/board.do?method=list";
+		}	
+		- 로그인성공/실패에 따른 loginMsg 모델 처리
+	3) jsp(list) 
+		- session값 있는 여부에 따른 메시지 처리(js)
+		- 로그인 성공 여부에 따른 loginMsg 메시지 처리(js)
+			실패시는 다시 로그인 dialogue 박스 로딩 처리.
+		var loginMsg="${loginMsg}";
+		if(loginMsg!=""){
+			alert(loginMsg)
+		}
+		// login 후 session이 있을 때..
+		var hasSession="${member.id}";
+		console.log(hasSession);
+		if(hasSession==""){ // session값이 없을 때..
+			alert("로그인이 필요합니다!");
+			$("#loginBtn").click(); // 다이얼로그 박스로딩..
+		}
+  		<p align="right">
+  			<c:if test="${not empty member.id}">
+  			${member.id} 로그인중<br>
+  		</c:if>					
+		<form id="frm02" class="form" action="${path}/board.do?method=login" method="post">
+        	<button type="button" id="login"  class="btn btn-primary">로그인</button>
+        <script>
+        	$("#login").click(function(){ 
+        		$("#frm02").submit();
+        	});
+        </script>				
+	================================================
+	4) 데이터베이스 처리
+		- db 설계 및 sql 작성
+			member테이블 확인 및 작성
+			select * from member where id=#{id} and pass=#{pass}
+		- vo 작성 
+			Member
+				private String id;
+				private String pass;
+				private String name;
+				private String auth;
+				private int point;
+		- dao/mapper 작성
+			public Member login(Member login);
+		- service/controller 호출.
+		- controller에 모델 데이터 설정
+			Member m = service.login(member);
+			if(m!=null){
+				// 로그인 성공
+				d.addAttribute("member",service.login(member));
+			}else{
+				d.addAttribute("loginMsg", "로그인 실패");
+			}
+			return "forward:/board.do?method=list";
+		- 화면단에 member.id ==> member.name		
+		=== 2/3조 =====				
+								 	
+				
 		
 		
 		

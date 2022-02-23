@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import board.a03_dao.BoardDao;
 import board.a04_vo.Board;
 import board.a04_vo.FileInfo;
+import board.a04_vo.Member;
 
 @Service
 public class BoardService {
@@ -64,5 +65,8 @@ public class BoardService {
 	}
 	public void deleteBoard(int no) {
 		dao.deleteBoard(no);
+	}
+	public Member login(Member login) {
+		return dao.login(login);
 	}
 }

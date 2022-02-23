@@ -4,6 +4,7 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="board.a04_vo.Board" alias="board"/>
+		<typeAlias type="board.a04_vo.Member" alias="member"/>
 		<typeAlias type="board.a04_vo.FileInfo" alias="fileInfo"/>
 	</typeAliases>
 	<mappers>

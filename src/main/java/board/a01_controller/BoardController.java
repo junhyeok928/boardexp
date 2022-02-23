@@ -3,16 +3,39 @@ package board.a01_controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import board.a02_service.BoardService;
 import board.a04_vo.Board;
+import board.a04_vo.Member;
 
 @Controller
+@SessionAttributes("member")
 @RequestMapping("/board.do")
 public class BoardController {
+	
+	@ModelAttribute("member")
+	public Member getMember() {
+		return new Member();
+	}
 	@Autowired
 	private BoardService service;
+
+	@RequestMapping(params="method=login")
+	public String login(@ModelAttribute("member") Member sch, Model d) {
+		Member member = service.login(sch);
+		if(member!=null) {
+			d.addAttribute("loginMsg", "로그인 성공");
+			d.addAttribute("member", member);
+			
+		}else {
+			d.addAttribute("loginMsg", "로그인 실패");
+		}
+		
+		return "forward:/board.do?method=list";
+	}
 	
 	// http://localhost:7080/board/board.do?method=list
 	@RequestMapping(params="method=list")

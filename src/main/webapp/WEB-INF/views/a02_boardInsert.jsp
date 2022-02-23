@@ -92,7 +92,7 @@
 		<div class="input-group-prepend">
 			<span class="input-group-text">작 성 자</span>
 		</div>
-		<input name="writer" class="form-control" 
+		<input name="writer" class="form-control" value="${member.id}"
 			placeholder="작성자입력하세요" />	
 		<div class="input-group-prepend">
 			<span class="input-group-text">상위글번호</span>

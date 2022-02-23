@@ -28,6 +28,21 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		var loginMsg="${loginMsg}";
+		if(loginMsg!=""){
+			alert(loginMsg)
+		}
+		// login 후 session이 있을 때..
+		var hasSession="${member.name}";
+		console.log("${member.id}");
+		console.log("세션이름:"+hasSession);
+		console.log(hasSession);
+		if(hasSession==""){ // session값이 없을 때..
+			alert("로그인이 필요합니다!");
+			$("#loginBtn").click();
+		}
+		
+		
 		<%-- 
 		
 		--%>
@@ -46,10 +61,17 @@
 
 <body>
 <div class="jumbotron text-center">
-  <h2 data-toggle="modal" data-target="#exampleModalCenter">게시판리스트</h2>
+  <h2 >게시판리스트</h2>
 
 </div>
 <div class="container">
+  <p align="right">
+  	<c:if test="${not empty member.id}">
+  		${member.id} 로그인중<br>
+  	</c:if>
+  	<button class="btn btn-info" type="button"
+  		data-toggle="modal" id="loginBtn" data-target="#exampleModalCenter"
+  	>로그인</button></p>
 	<form id="frm01" class="form-inline"  method="post">
   	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 	    <input class="form-control mr-sm-2" name="title" value="${board.title}" placeholder="제목" />
@@ -89,26 +111,31 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">타이틀</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">로그인</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-		<form id="frm02" class="form"  method="post">
+		<form id="frm02" class="form" action="${path}/board.do?method=login" method="post">
 	     <div class="row">
 	      <div class="col">
-	        <input type="text" class="form-control" placeholder="사원명 입력" name="ename">
+	        <input type="text" class="form-control" placeholder="아이디 입력" name="id">
 	      </div>
 	      <div class="col">
-	        <input type="text" class="form-control" placeholder="직책명 입력" name="job">
+	        <input type="password" class="form-control" placeholder="패스워드 입력" name="pass">
 	      </div>
 	     </div>
 	    </form> 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" id="login"  class="btn btn-primary">로그인</button>
+        <script>
+        	$("#login").click(function(){ 
+        		$("#frm02").submit();
+        	});
+        </script>
       </div>
     </div>
   </div>
