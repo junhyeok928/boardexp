@@ -15,6 +15,27 @@ import board.a04_vo.Member;
 @SessionAttributes("member")
 @RequestMapping("/board.do")
 public class BoardController {
+	/*
+	# url 호출 패턴
+	1. 메서드별로 GetMapping/PostMapping/RequestMapping
+		http://localhost:7080/springweb/empList.do
+		requestMapping("/empList.do")
+		controller 상관없이 각 기능메서드 url을 호출하여 처리한다.
+	2. controller 단위로 공통적으로 url호출, 각 기능별로는 요청키=요청값 형태로 구분하여
+		처리
+		RequestMapping("/board.do")
+		public class BoardController
+		각 기능별 메서드 선언.
+		RequestMapping(params="method=login")
+			==> 공통 + 요청값 추가 형태로 controller단위로 공통적으로 처리
+			http://localhost:7080/springweb/board.do?method=login
+		RequestMapping(params="method=detail")
+			http://localhost:7080/springweb/board.do?method=login
+		RequestMapping(params="method=list")
+			http://localhost:7080/springweb/board.do?method=list	
+	 * 
+	 * */
+	
 	
 	@ModelAttribute("member")
 	public Member getMember() {
@@ -46,7 +67,7 @@ public class BoardController {
 	// http://localhost:7080/board/board.do?method=insertFrm
 	// 초기 화면 호출
 	@RequestMapping(params="method=insertFrm")
-	public String boardInsertFrm() {
+	public String boardInsertFrm(Board board) { // 모델어트리뷰트 board설정
 		
 		return "a02_boardInsert";
 	}
@@ -71,4 +92,12 @@ public class BoardController {
 		d.addAttribute("msg", "삭제되었습니다!");
 		return "a03_boardDetail";
 	}	
+	@RequestMapping(params="method=upt")
+	public String boardUpdate(Board upt, Model d) {
+		service.updateBoard(upt);
+		d.addAttribute("msg", "수정되었습니다");
+		
+		return "forward:/board.do?method=detail";
+	}
+	
 }

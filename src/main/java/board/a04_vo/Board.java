@@ -6,6 +6,8 @@ import java.util.Date;
 import org.springframework.web.multipart.MultipartFile;
 
 public class Board {
+	private int cnt;
+	private int level;
 	private int no;
 	private int refno;
 	private String title;
@@ -18,6 +20,18 @@ public class Board {
 	// 파일 정보로 화면에 한 번에 로딩 하기 위해서 처리..
 	private ArrayList<String> fnames;
 	
+	public int getCnt() {
+		return cnt;
+	}
+	public void setCnt(int cnt) {
+		this.cnt = cnt;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
+	}
 	public int getNo() {
 		return no;
 	}

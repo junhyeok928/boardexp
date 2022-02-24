@@ -28,28 +28,42 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		$("#loginBtn").hide();
 		var loginMsg="${loginMsg}";
 		if(loginMsg!=""){
 			alert(loginMsg)
+			if(loginMsg=="로그인 실패"){
+				$("#loginBtn").click();
+			}
+		
 		}
 		// login 후 session이 있을 때..
 		var hasSession="${member.name}";
-		console.log("${member.id}");
+		//console.log("${member.id}");
 		console.log("세션이름:"+hasSession);
 		console.log(hasSession);
 		if(hasSession==""){ // session값이 없을 때..
 			alert("로그인이 필요합니다!");
 			$("#loginBtn").click();
+		}else{
+			$("#loginBtn").show();
+			$("#loginBtn").text("로그아웃");
 		}
-		
+		// session이 없는데, 다이얼로그를 닫는 경우, 처리..
+		$("#exampleModalCenter").on('hide.bs.modal', function(){
+			if(hasSession==""){ // session값이 없을 때..
+				alert("로그인이 필요합니다!");
+				$("#loginBtn").click();
+			}
+		});	
 		
 		<%-- 
 		
 		--%>
 		$("#regBtn").click(function(){
-			if(confirm("등록하시겠습니까?")){
-				location.href="${path}/board.do?method=insertFrm";
-			}
+			//if(confirm("등록하시겠습니까?")){
+			location.href="${path}/board.do?method=insertFrm";
+			//}
 		});
 	});
 	function detail(no){
@@ -98,7 +112,24 @@
     </thead>	
     <tbody>
     	<c:forEach var="board" items="${boardList}">
-    		<tr ondblclick="detail(${board.no})"><td>${board.no}</td><td>${board.title}</td>
+    		<tr ondblclick="detail(${board.no})">
+    			<td>${board.cnt}</td>
+    			<td style="text-align:left">
+    			<%--
+    			레벨에 따른 공백 처리 후, 답글 이미지 넣기.
+    			level : 계층 레벨에 따라, 공백 및 마지막에 답글 이미지 표현
+    			 --%>	
+    			<c:forEach varStatus="sts" begin="1" end="${board.level}">
+    				&nbsp;&nbsp;
+    				<c:if test="${board.level>1 and sts.last }">
+    					<img width="25" height="15" 
+    						src="${path}/a02_img/reply1.PNG"
+    					/>
+    				</c:if>
+    				<%-- level 만큼 공백을 넣고, 마지막(sts.last)에 답글이미지 삽입  --%>
+    			</c:forEach>
+    			 
+    			${board.title}</td>
     			<td>${board.writer}</td>
     			<td><fmt:formatDate value="${board.regdte}"/></td>
     			<td>${board.readcnt}</td></tr>

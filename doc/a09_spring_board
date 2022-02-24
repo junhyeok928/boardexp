@@ -291,8 +291,94 @@
 		- 화면단에 member.id ==> member.name		
 		=== 2/3조 =====				
 								 	
-				
+# 게시판 수정 처리
+0. 주요 파일 및 코드
+	BoardController.java(컨트롤단)
+		@RequestMapping(params="method=update")
+	a03_boardDetail.jsp(뷰)
+		$("#uptBtn").click(function(){   
+			
+		});
+1. 주요 프로세스
+	1) 상세화면에서 수정 버튼을 클릭,
+	2) session과 작성자의 값이 같은지 여부 확인 수정 권한 확인
+	3) form의 action을 수정 url로 변경 및 submit()
+	4) 컨트롤러 : 수정 url에서
+		요청값으로 Board로 받아  service ==> dao ==> Mapper 넘겨주고,
+		정상 수정 메시지 모델 데이터 처리
+	5) 화면단, js 수정 메서지 출력.. 조회화면 이동 여부를 확인 메시지
 		
+2. 개발 순서
+	1) controller 수정 url 만들기, 메시지 처리
+			@RequestMapping(params="method=update")
+			public String updateBoard(Board upt, Model d){
+				d.addAttribute("msg","수정완료");
+			}
+	2) view단 : 수정 버튼 click 이벤트 요청값 처리, submit 처리
+		name="regdte"  name="uptdte" 삭제 : DB에서 처리..(에러발생)
+		권한 확인
+		$("#uptBtn").click(function(){
+			if(sessId != $("[name=writer]").val()){
+				alert("수정 권한이 없습니다");
+			}else{
+				if(confirm("수정하시겠습니까")){
+					$("form").attr("action","${path}/board.do?method=update");									
+					$("form").submit();
+				}
+			}
+		});	
+ 	===========6조======		
+	3) DB 처리
+		sql : update board 
+					set title= #{title},
+						content=#{content},
+						uptdte= sysdate
+				where no = #{no}
+		vo
+		dao : public void updateBoard(Board upt);
+		mapper
+	4) service ==> controller 호출
+	======= 2,3조 ======	
+# 답글 처리하기..
+1. 처리프로세스
+	상세 화면에 답글을 클릭하면
+	현재 글번호는 답글 화면에 refno
+	제목은 RE:현재글제목
+	내용은 
+		하단에 표기하는 형식으로
+	답글 form으로 이동이 되고,
+	저장을 클릭시, 답글이 아래의 데이터와 같이 저장되게 처리하는 것이다.
+		insert into board(board_seq.nextval, 이전글no, 'RE:이전글',
+			'답글등록 \n\n이전글', 0, sydate, sysdate); 	
+2. 개발 순서
+	0) 개발 소스 : BoardController.java @RequestMapping(params="method=insertFrm")
+			views\a03_boardDetail.jsp
+			\views\a02_boardInsert.jsp
+	1) 답글 클릭시, 등록 화면 호출
+		요청값으로 기본 등록 화면에
+		<input name="refno" value="${board.no}"/> 
+		<input name="title" value="RE:${board.title}"/> 
+		형식으로 전송되게 한다.					
+	2) 등록 처리..
+	3) 데이터 계층형으로 저장
+	 	계층형 sql로 답글이 바로 밑에 나오게 처리가 가능..
+		SELECT *
+		FROM board
+		START WITH refno=0
+		CONNECT BY PRIOR NO=refno
+		ORDER siblings BY NO desc	 	
+		SELECT *
+		FROM board
+		START WITH refno=0 : 계층적 sql의 최상위 조건을 선언
+		CONNECT BY PRIOR NO=refno : 테이블 안에 컴럼끼리 연관관계(상/하위)를 선언.
+		ORDER siblings BY NO desc : 최근에 등록된 내용을 상위로 하여 desc 처리			
+		해당하는 타이틀 내용은 왼쪽 정렬 처리
+			<td style="text-align:left"
+	4) 데이터 리스트 처리
+		- no 번호를 1번부터 카운트 리스트 되게 처리
+			rownum 활용
+		- 답글에 대한 간격처리 : level
+			sql, vo 속성추가, 화면단..
 		
 		
 		

@@ -69,4 +69,7 @@ public class BoardService {
 	public Member login(Member login) {
 		return dao.login(login);
 	}
+	public void updateBoard(Board upt) {
+		dao.updateBoard(upt);
+	}
 }

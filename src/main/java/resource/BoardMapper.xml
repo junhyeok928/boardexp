@@ -7,8 +7,8 @@
 	List<Board> getBoardList(Board sch)
 	 -->
 	<select id="getBoardList" parameterType="board" resultType="board">
-		select * 
-		from board 
+		select rownum cnt, level, b.* 
+		from board b
 		where 1=1
 		<!-- mybatis에서 null 아니고 ''공백이 아닐 때 -->
 		<if test="writer!=null and writer!=''"> 
@@ -17,7 +17,9 @@
 		<if test="title!=null and title!=''"> 
 		and title like '%'||#{title}||'%'
 		</if>
-		order by no desc	
+		START WITH refno=0
+		CONNECT BY PRIOR NO=refno
+		ORDER siblings BY NO desc		
 	</select>
 	<!-- 
 				insert into board values(board_seq.nextval, 0, '초기화면','홍길동',
@@ -59,6 +61,15 @@
 		select * 
 		from member 
 		where id=#{id} and pass=#{pass}
-	</select>	 	
-	
+	</select>
+	<!-- 
+	updateBoard(Board upt)
+	 -->
+	<update id="updateBoard" parameterType="board">
+		update board 
+		set title= #{title},
+			content=#{content},
+			uptdte= sysdate
+		where no = #{no}	
+	</update>	 	
 </mapper>

@@ -16,4 +16,5 @@ public interface BoardDao {
 	public ArrayList<String> getFileInfo(int fno);
 	public void deleteBoard(int no);
 	public Member login(Member login);
+	public void updateBoard(Board upt);
 }

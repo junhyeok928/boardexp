@@ -86,18 +86,19 @@
 		<div class="input-group-prepend">
 			<span class="input-group-text">제 목</span>
 		</div>
-		<input name="title" class="form-control" placeholder="제목입력하세요" />			 
+		<input name="title" class="form-control" value="${board.title}" placeholder="제목입력하세요" />			 
 	</div>  
 	<div class="input-group mb-3 fileCls">	
 		<div class="input-group-prepend">
 			<span class="input-group-text">작 성 자</span>
 		</div>
 		<input name="writer" class="form-control" value="${member.id}"
-			placeholder="작성자입력하세요" />	
+			placeholder="작성자입력하세요" readonly/> 
+			<!-- 작성자는 session id으로만 등록/수정 불가 처리 -->	
 		<div class="input-group-prepend">
 			<span class="input-group-text">상위글번호</span>
 		</div>
-		<input name="refno" class="form-control" value="0"/>	
+		<input name="refno" class="form-control" value="${board.refno}"/>	
 	</div>		
 	<div class="input-group mb-3 fileCls">
 		<div class="input-group-prepend">
@@ -105,7 +106,7 @@
 		</div>
 		<textarea name="content" rows="10" 
 			class="form-control" 
-			placeholder="내용입력하세요" ></textarea>		 
+			placeholder="내용입력하세요" >${board.content}</textarea>		 
 	</div> 
 	<div class="input-group mb-3 fileCls">
 		<div class="input-group-prepend">

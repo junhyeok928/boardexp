@@ -31,8 +31,16 @@
 		var sessId = "${member.id}"
 		var msg = "${msg}";
 		if(msg!=""){
-			alert(msg+"\n조회화면이동!")
-			location.href="${path}/board.do?method=list";
+			if(msg=="수정되었습니다"){
+				if(confirm(msg+"\n조회화면이동하시겠습니까?")){
+					location.href="${path}/board.do?method=list";
+				}	
+			}
+			if(msg=="삭제되었습니다."){
+			
+				alert(msg+"\n조회화면이동!")
+				location.href="${path}/board.do?method=list";
+			}
 		}
 		<%-- 
 		
@@ -40,6 +48,8 @@
 		$("#goMain").click(function(){
 			location.href="${path}/board.do?method=list";
 		});
+		// 삭제버튼 클릭시, session으로 수정권한 확인 해서(작성자와 동일)
+		// 권한이 있는 경우에만 삭제 처리..
 		$("#delBtn").click(function(){
 			if(sessId!=$("[name=writer]").val()){
 				alert("삭제는 작성자만이 가능합니다.")
@@ -49,6 +59,27 @@
 				}
 			}
 		});
+		$("#uptBtn").click(function(){
+			if(sessId!=$("[name=writer]").val()){
+				alert("수정은 작성자만이 가능합니다!");
+			}else{
+				if(confirm("수정하시겠습니까?")){
+					$("form").attr("action","${path}/board.do?method=upt");
+					$("form").submit();
+				}
+			}
+		});
+		$("#reBtn").click(function(){
+			if(confirm("답글을 작성하시겠습니까?")){
+				$("[name=refno]").val($("[name=no]").val());
+				$("[name=title]").val("RE:"+$("[name=title]").val());
+				$("[name=content]").val("\n\n\n\n\n\n\======이전글======\n"+$("[name=content]").val());
+				$("form").attr("action","${path}/board.do?method=insertFrm");
+				// method=insertFrm
+				$("form").submit();
+			}
+		});
+		
 	});
 	function downFile(fname){
 		if(confirm("다운로드할 파일:"+fname)){
@@ -92,7 +123,8 @@
 			<span class="input-group-text">작 성 자</span>
 		</div>
 		<input name="writer" class="form-control" 
-			placeholder="작성자입력하세요"   value="${board.writer}" />	
+			placeholder="작성자입력하세요"   value="${board.writer}" readonly/>
+		<!-- 작성자는 입력해서 변경불가능 처리 -->	
 		<div class="input-group-prepend">
 			<span class="input-group-text">조회수</span>
 		</div>
@@ -103,13 +135,13 @@
 			<span class="input-group-text">등 록 일</span>
 		</div>
 		
-		<input name="regdte" class="form-control" 
+		<input class="form-control" 
 			placeholder="작성자입력하세요"  
 			value='<fmt:formatDate type="both" value="${board.regdte}" />'/>	
 		<div class="input-group-prepend">
 			<span class="input-group-text">수 정일</span>
 		</div>
-		<input name="uptdte" class="form-control" 
+		<input  class="form-control" 
 			value='<fmt:formatDate type="both" value="${board.uptdte}" />'/>	
 	</div>			
 	<div class="input-group mb-3 fileCls">
