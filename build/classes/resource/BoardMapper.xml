@@ -6,20 +6,23 @@
 	<!-- 
 	List<Board> getBoardList(Board sch)
 	 -->
-	<select id="getBoardList" parameterType="board" resultType="board">
-		select rownum cnt, level, b.* 
-		from board b
-		where 1=1
-		<!-- mybatis에서 null 아니고 ''공백이 아닐 때 -->
-		<if test="writer!=null and writer!=''"> 
-		and writer like '%'||#{writer}||'%'
-		</if> 
-		<if test="title!=null and title!=''"> 
-		and title like '%'||#{title}||'%'
-		</if>
-		START WITH refno=0
-		CONNECT BY PRIOR NO=refno
-		ORDER siblings BY NO desc		
+	<select id="getBoardList" parameterType="boardSch" resultType="board">
+		select *
+		from (
+			select rownum cnt, level, b.* 
+			from board b
+			where 1=1
+			<!-- mybatis에서 null 아니고 ''공백이 아닐 때 -->
+			<if test="writer!=null and writer!=''"> 
+			and writer like '%'||#{writer}||'%'
+			</if> 
+			<if test="title!=null and title!=''"> 
+			and title like '%'||#{title}||'%'
+			</if>
+			START WITH refno=0
+			CONNECT BY PRIOR NO=refno
+			ORDER siblings BY NO desc )
+		where cnt between #{start} and #{end}
 	</select>
 	<!-- 
 				insert into board values(board_seq.nextval, 0, '초기화면','홍길동',

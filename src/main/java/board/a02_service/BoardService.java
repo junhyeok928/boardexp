@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import board.a03_dao.BoardDao;
 import board.a04_vo.Board;
+import board.a04_vo.BoardSch;
 import board.a04_vo.FileInfo;
 import board.a04_vo.Member;
 
@@ -19,7 +20,9 @@ public class BoardService {
 	@Autowired
 	private BoardDao dao;
 
-	public List<Board> getBoardList(Board sch) {
+	public List<Board> getBoardList(BoardSch sch) {
+		sch.setStart(1);
+		sch.setEnd(5);
 		return dao.getBoardList(sch);
 	}
 

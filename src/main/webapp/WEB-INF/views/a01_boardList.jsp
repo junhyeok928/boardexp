@@ -86,10 +86,10 @@
   	<button class="btn btn-info" type="button"
   		data-toggle="modal" id="loginBtn" data-target="#exampleModalCenter"
   	>로그인</button></p>
-	<form id="frm01" class="form-inline"  method="post">
+	<form id="frm01" class="form-inline" action="${path}/board.do?method=list"  method="post">
   	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-	    <input class="form-control mr-sm-2" name="title" value="${board.title}" placeholder="제목" />
-	    <input class="form-control mr-sm-2" name="writer" value="${board.writer}"
+	    <input class="form-control mr-sm-2" name="title" value="${boardSch.title}" placeholder="제목" />
+	    <input class="form-control mr-sm-2" name="writer" value="${boardSch.writer}"
 	    	  placeholder="작성자" />
 	    <button class="btn btn-info" type="submit">조회</button>
 	    <button class="btn btn-success" id="regBtn" type="button">등록</button>

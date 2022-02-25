@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import board.a02_service.BoardService;
 import board.a04_vo.Board;
+import board.a04_vo.BoardSch;
 import board.a04_vo.Member;
 
 @Controller
@@ -60,7 +61,8 @@ public class BoardController {
 	
 	// http://localhost:7080/board/board.do?method=list
 	@RequestMapping(params="method=list")
-	public String boardList(Board sch, Model d) {
+	public String boardList(BoardSch sch, Model d) {
+		// boardSch
 		d.addAttribute("boardList", service.getBoardList(sch));
 		return "a01_boardList";
 	}
