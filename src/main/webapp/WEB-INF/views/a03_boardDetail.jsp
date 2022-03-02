@@ -71,6 +71,8 @@
 		});
 		$("#reBtn").click(function(){
 			if(confirm("답글을 작성하시겠습니까?")){
+				// 등록 form에 기본적인 답글 형식을 만들어서 요청값으로 전송하여,
+				// 등록 form에서 추가 데이터를 입력하여 처리하게 한다.
 				$("[name=refno]").val($("[name=no]").val());
 				$("[name=title]").val("RE:"+$("[name=title]").val());
 				$("[name=content]").val("\n\n\n\n\n\n\======이전글======\n"+$("[name=content]").val());

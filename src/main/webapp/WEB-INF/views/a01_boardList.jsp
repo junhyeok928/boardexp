@@ -28,6 +28,7 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		<%-- 
 		$("#loginBtn").hide();
 		var loginMsg="${loginMsg}";
 		if(loginMsg!=""){
@@ -57,19 +58,33 @@
 			}
 		});	
 		
-		<%-- 
+		
 		
 		--%>
+    	$("#login").click(function(){ 
+    		$("#frm02").submit();
+    	});		
 		$("#regBtn").click(function(){
 			//if(confirm("등록하시겠습니까?")){
 			location.href="${path}/board.do?method=insertFrm";
 			//}
 		});
+		var pageSize="${boardSch.pageSize}"
+			$("[name=pageSize]").val(pageSize);
+			$("[name=pageSize]").change(function(){
+				$("[name=curPage]").val(1);
+				$("#frm01").submit();
+			});		
+		
 	});
 	function detail(no){
 		// 더블 클릭시, no를 매개변수를 넘기고 controller에 요청값을 전달 처리.
 		location.href="${path}/board.do?method=detail&no="+no;
 	}
+	function goPage(no){
+		$("[name=curPage]").val(no);
+		$("#frm01").submit();
+	}	
 </script>
 </head>
 
@@ -86,15 +101,35 @@
   	<button class="btn btn-info" type="button"
   		data-toggle="modal" id="loginBtn" data-target="#exampleModalCenter"
   	>로그인</button></p>
-	<form id="frm01" class="form-inline" action="${path}/board.do?method=list"  method="post">
+	<form id="frm01" class="form" action="${path}/board.do?method=list"  method="post">
+		<input type="hidden" name="curPage" value="1"/>
   	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 	    <input class="form-control mr-sm-2" name="title" value="${boardSch.title}" placeholder="제목" />
 	    <input class="form-control mr-sm-2" name="writer" value="${boardSch.writer}"
 	    	  placeholder="작성자" />
 	    <button class="btn btn-info" type="submit">조회</button>
 	    <button class="btn btn-success" id="regBtn" type="button">등록</button>
- 	</nav>
+ 	</nav><br>
+	<div class="input-group mb-3">
+		<div class="input-group-prepend">
+			<span class="input-group-text">총 ${boardSch.count}건</span>
+		</div>
+		<input class="form-control"/>
+		<div class="input-group-append">
+			<span class="input-group-text">페이지 크기</span>
+			<select name="pageSize" class="form-control">
+				<option>3</option>
+				<option>5</option>
+				<option>10</option>
+				<option>20</option>
+				<option>50</option>
+			</select>
+		</div>
+	</div>
 	</form>
+	<script type="text/javascript">
+
+	</script>
    <table class="table table-hover table-striped">
    	<col width="10%">
    	<col width="50%">
@@ -135,9 +170,25 @@
     			<td>${board.readcnt}</td></tr>
     	</c:forEach>
     </tbody>
-	</table>    
-    
+	</table>
+	<!-- class="page-item active" -->
+	<ul class="pagination  justify-content-end">
+	  <li class="page-item"><a class="page-link" 
+	  	href="javascript:goPage(${boardSch.startBlock!=1?boardSch.startBlock-1:1})"">Previous</a></li>
+	  <c:forEach var="cnt" begin="${boardSch.startBlock}" end="${boardSch.endBlock}">
+	  	<li class="page-item ${cnt==boardSch.curPage?'active':''}"> <!-- 클릭한 현재 페이지 번호 -->
+	  		<a class="page-link" href="javascript:goPage(${cnt})">${cnt}</a></li>
+	  </c:forEach>
+	  <li class="page-item"><a class="page-link" 
+	  	href="javascript:goPage(${boardSch.endBlock!=boardSch.pageCount?boardSch.endBlock+1:boardSch.endBlock})">Next</a></li>
+	  <!-- 다음 block의 리스트는 현재 블럭의 마지막 번호 +1 
+	  	   마지막 블럭이 총페이지수일 때는 다음 블럭이 없기 때문에 그대로 두고
+	  	   다음 블럭이 있을 때만 카운트 되게 
+	  -->
+	</ul>
+
 </div>
+
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -162,11 +213,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" id="login"  class="btn btn-primary">로그인</button>
-        <script>
-        	$("#login").click(function(){ 
-        		$("#frm02").submit();
-        	});
-        </script>
+
       </div>
     </div>
   </div>

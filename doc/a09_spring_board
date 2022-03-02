@@ -352,6 +352,13 @@
 	저장을 클릭시, 답글이 아래의 데이터와 같이 저장되게 처리하는 것이다.
 		insert into board(board_seq.nextval, 이전글no, 'RE:이전글',
 			'답글등록 \n\n이전글', 0, sydate, sysdate); 	
+		no refno
+		1    0
+		2	 0
+		3	 1    : 답글인 경우, refno에 상위 글에 대한 글번호가 입력된다.
+		4    3    : 계층적으로 데이터가 입력이 된다..
+			
+			
 2. 개발 순서
 	0) 개발 소스 : BoardController.java @RequestMapping(params="method=insertFrm")
 			views\a03_boardDetail.jsp
@@ -438,14 +445,109 @@
 		${boardSch.writer}
 
 3. mapper 부분 sql 처리 시작번호/마지막번호
+	BoardService.java
+	    public List<Board> getBoardList(BoardSch sch) {
+			sch.setStart(1);
+			sch.setEnd(5);
+	BoardMapper.xml
+			select *
+			from (
+				select rownum cnt, level, b.* 
+	            ...
+	            ..
+	  			ORDER siblings BY NO desc )
+			where cnt between #{start} and #{end}
+	a01_boardList.jsp
+	    <form id="frm01" class="form-inline" action="${path}/board.do?method=list"  
+
+
 4. 전체 검색데이터 가져오는 dao/mappper 작성
+	sql
+		select count(*)
+		from board
+		where title like '%'||''||'%'
+		and writer like '%'||''||'%'
+	dao/mapper
+		public int totCnt(BoardSch sch);
+
 5. service단에서 단계별로 데이터 처리 내용 
+	public List<Board> getBoardList(BoardSch sch) {
+		// 1. 전체 갯수 1) dao 호출해서 총건수 설정..(BoardSch		
+
+
 6. 화면단 구현
+	 0) 총건수 표시
+	 	ex) 4조
 	 1) 한번에 보일 페이지 건수 선택 : select
 	 2) 클릭시, 현재  페이지 번호를 curPage hidden 속성을 설정 함수 선언.
 	 3) 하단에 반복문을 통한 paging 범위로 리스트 처리
 	 4) 전체 블럭범위에 따라 시작 블럭과 마지막 블럭을 선언 
 	 	<< >> : 화살표 형식으로 블럭이동 처리.
+
+# 하단에 특정한 페이지 번호 클릭시, 해당 페이지 데이터 로딩하기.
+1. 개발 순서
+	1) 페이지번호 클릭, 함수 선언 및 hidden으로 curPage를 설정 및 submit()처리
+			<input type="hidden" name="curPage" value="1"/>
+			function goPage(no)
+				$("[name=curPage]").val(no); 	$("#frm01").submit();
+			<a class="page-link" href="javascript:goPage(${cnt})"">
+	2) service단 처리
+		현재 클릭한 페이지 번호, getCurPage()와  getPageSize()를 통해,
+		DB sql에 전달할 최종 start(시작번호), end(마지막번호)를 전송한다.
+		if(sch.getCurPage()==0) sch.setCurPage(1);
+		마지막번호 : 현재클릭한 페이지번호 * 페이지당 보일 데이터 건수.
+			sch.setEnd(sch.getCurPage()*sch.getPageSize())
+		시작번호 :
+			sch.setStart((sch.getCurpage()-1)*sch.getPageSize()+1)
+	6조 제출..
+			현재페이지		페이지당건수	시작번호		마지막번호	
+			1			5			1			5
+			2			5			6			10
+			3			5			11			15
+			4			5			16			20	
+# 페이지 블럭 
+1. 페이지 수가 많을 때, 한번에 나올 수 있는 페이지 수를 지정해서 [이전][이후]를 
+활용하여 하단에 페이지도 효과적으로 처리할 수 있다.
+2. 주요 개념
+	1) 기본 페이지 블럭의 갯수 지정
+		[1][2][3]  :3개		 	
+		[1][2][3][4][5]  :5개		 	
+		[1][2][3][4][5][6][7]  :7개
+		보통 홀수로 한번에 출력할 페이지 블럭의 갯수를 지정한다.
+	2) 현재 블럭 번호.
+		[이전][이후] 링크를 통해 이동할 때, 두번째 블럭의 경우
+		[이전][4][5][6][이후] 로 표현되고, 나오는 페이지 번호는 4~6정도가 된다.
+	3) 블럭별 시작 페이지 번호와 마지막 페이지 번호
+		이전 이후를 통해 이동할 때, 나타나는 시작 페이지 번호와 마지막 페이지
+		번호를 설정하여야 화면단에서 반복의 시작과 마지막을 지정할 수 있다.
+		위 경우 [4]가 시작 페이지 번호 [6]이 마지막 번호이다.
+		- 마지막 페이지 번호 : 현재 블럭 번호*블럭의 크기 
+			마지막 페이지 번호는 총페이지 수와 같아야 한다.
+		- 시작페이지 번호 : (현재 블럭 번호-1)*블럭의 크기 +1
+		
+							 	
+	 	
+	 	
+	 	
+# 조회수 카운트업
+0. 변경파일
+	
+1. 처리 프로세스
+	리스트 화면에서 해당 데이터 클릭시 조회수가 증가되어 처리되게 한다.
+2. 개발 순서
+	1) sql 작성.
+		update board
+			set readcnt = readcnt+1
+			where no = #{no}
+	2) dao/mapper
+		public void updateReadCnt(int no);
+	3) service
+		상세화면 호출시 처리..
+		
+	
+	
+				
+	
 	 	
 	 
 
