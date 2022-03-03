@@ -126,10 +126,7 @@
 			</select>
 		</div>
 	</div>
-	</form>
-	<script type="text/javascript">
-
-	</script>
+	</form >
    <table class="table table-hover table-striped">
    	<col width="10%">
    	<col width="50%">

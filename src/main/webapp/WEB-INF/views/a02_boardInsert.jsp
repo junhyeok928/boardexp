@@ -93,7 +93,7 @@
 			<span class="input-group-text">작 성 자</span>
 		</div>
 		<input name="writer" class="form-control" value="${member.id}"
-			placeholder="작성자입력하세요" readonly/> 
+			placeholder="작성자입력하세요" /> 
 			<!-- 작성자는 session id으로만 등록/수정 불가 처리 -->	
 		<div class="input-group-prepend">
 			<span class="input-group-text">상위글번호</span>
