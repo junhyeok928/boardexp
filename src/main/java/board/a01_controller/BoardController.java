@@ -62,7 +62,7 @@ public class BoardController {
 	// http://localhost:7080/board/board.do?method=list
 	@RequestMapping(params="method=list")
 	public String boardList(BoardSch sch, Model d) {
-		// boardSch
+		// boardSch : 요청값 + 기본 모델
 		d.addAttribute("boardList", service.getBoardList(sch));
 		return "a01_boardList";
 	}

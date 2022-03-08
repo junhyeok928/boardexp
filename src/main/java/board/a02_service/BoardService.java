@@ -47,13 +47,14 @@ public class BoardService {
 			}
 		/*
 		현재페이지	나올 번호 리스트(5개기준)
-		1페이지	12345
-		2페이지	678910
-		3페이지	1112131415
+		1페이지	1 2345
+		2페이지	6 78910
+		3페이지	11 12131415
 		 * */
 		// 5. 시작번호
 		sch.setStart((sch.getCurPage()-1)*sch.getPageSize()+1);
-		// 6. 마지막번호
+		// 6. 마지막번호 : sql에서 없는 페이지는 로딩이 안되기에 마지막 총페이지 번호 조건을
+		//    넣지 않고 처리했다.
 		sch.setEnd(sch.getCurPage()*sch.getPageSize());
 		
 		// 7 하단의 페이지 block 처리

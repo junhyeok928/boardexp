@@ -70,11 +70,11 @@
 			//}
 		});
 		var pageSize="${boardSch.pageSize}"
-			$("[name=pageSize]").val(pageSize);
-			$("[name=pageSize]").change(function(){
-				$("[name=curPage]").val(1);
-				$("#frm01").submit();
-			});		
+		$("[name=pageSize]").val(pageSize);
+		$("[name=pageSize]").change(function(){
+			$("[name=curPage]").val(1);
+			$("#frm01").submit();
+		});		
 		
 	});
 	function detail(no){
